@@ -53,6 +53,12 @@ export const authAPI = {
     login(data: LoginParamsType){
         const promise = instance.post<ResponseType<{userId?: number}>>('auth/login', data);
         return promise;
+    },
+    me(){
+        return instance.get<ResponseType>('auth/me');
+    },
+    logout(){
+        return instance.delete<ResponseType>('auth/login');
     }
 }
 

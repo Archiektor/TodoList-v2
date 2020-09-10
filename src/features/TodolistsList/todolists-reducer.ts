@@ -60,6 +60,9 @@ export const fetchTodolistsTC = () => {
                 dispatch(setTodolistsAC(res.data))
                 dispatch(changeStatusAC('succeeded'))
             })
+            .catch(err => {
+                handleServerNetworkError(err, dispatch);
+            })
     }
 }
 export const removeTodolistTC = (todolistId: string) => {

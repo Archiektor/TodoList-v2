@@ -1,23 +1,25 @@
 import React from 'react';
 import {
+    Button,
     Checkbox,
     FormControl,
     FormControlLabel,
     FormGroup,
     FormLabel,
-    TextField,
-    Button,
-    Grid
+    Grid,
+    TextField
 } from '@material-ui/core';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {changeStatusAC} from '../../app/app-reducer';
 import {useFormik} from 'formik';
-import {loginTC} from './login-reducer';
+import {loginTC} from './auth-reducer';
+import {AppRootStateType} from '../../app/store';
+import {Redirect} from 'react-router-dom';
 
 export const Login = () => {
     const dispatch = useDispatch();
     dispatch(changeStatusAC('succeeded'));
-    const loginLink = <a href="https://social-network.samuraijs.com/">here</a>;
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.login.isLoggedIn);
 
     const formik = useFormik({
         initialValues: {
@@ -27,7 +29,7 @@ export const Login = () => {
         },
         onSubmit: values => {
             dispatch(loginTC(values));
-            alert(JSON.stringify(values));
+            //alert(JSON.stringify(values));
         },
         validate: values => {
             if (!values.email) {
@@ -43,22 +45,31 @@ export const Login = () => {
         }
     });
 
+    if(isLoggedIn) {
+        return <Redirect to={'/'}/>
+    }
+
     return (
         <Grid container justify={'center'}>
             <Grid item xs={4}>
                 <form onSubmit={formik.handleSubmit}>
                     <FormControl>
-                        <FormLabel children={
-                            <span>To log in get registered {loginLink}<br/>
-                            or use common test account credentials:<br/>
-                            Email: free@samuraijs.com<br/>
-                            Password: free</span>}/>
+                        <FormLabel>
+                            <p>To log in get registered
+                                <a href={'https://social-network.samuraijs.com/'}
+                                   target={'_blank'}>here
+                                </a>
+                            </p>
+                            <p>or use common test account credentials:</p>
+                            <p>Email: free@samuraijs.com</p>
+                            <p>Password: free</p>
+                            </FormLabel>
                         <FormGroup>
                             <TextField label={'Email'} margin={'normal'} {...formik.getFieldProps('email')}/>
                             {formik.errors.email ? <div>{formik.errors.email}</div> : null}
                             <TextField type="password" label={'Password'}
                                        margin={'normal'} {...formik.getFieldProps('password')}/>
-                            {formik.errors.password ? <div>{formik.errors.password}</div> : null}s
+                            {formik.errors.password ? <div>{formik.errors.password}</div> : null}
                             <FormControlLabel label={'Remeber me'}
                                               control={<Checkbox {...formik.getFieldProps('rememberMe')}
                                                                  checked={formik.values.rememberMe}/>}

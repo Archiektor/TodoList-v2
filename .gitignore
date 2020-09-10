@@ -29,3 +29,4 @@ yarn-error.log*
 /src/logo.svg
 /src/stories/0-Welcome.stories.tsx
 /src/stories/1-Button.stories.tsx
+/src/features/Login/Basic.tsx
